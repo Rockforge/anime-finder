@@ -1,4 +1,4 @@
-# revue-app
+# revue-application
 
 ## Project setup
 ```
