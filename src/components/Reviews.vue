@@ -52,7 +52,7 @@ export default {
     },
     filters: {
         parseDate: function(date) {
-            return moment(date).format('YYYY-MM-D');
+            return moment(date).format('YYYY-MM-D, h:mm:ss a');
         },
         truncate: function(content) {
             if (content.length > 50) {
