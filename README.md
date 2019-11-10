@@ -1,4 +1,4 @@
-# revue-application
+# anime-finder
 
 ## Project setup
 ```

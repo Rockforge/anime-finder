@@ -2,17 +2,16 @@
     <div class="container">
         <h4>Reviews</h4>
 
-
-        <div class="review-form" v-if="movie">
+        <div class="review-form" v-if="anime">
             <h5>Add new review</h5>
             <form @submit.prevent="addReview">
                 <div class="form-group">
                     <label for="">Review</label>
-                    <textarea v-model="review.content" cols="30" rows="5"></textarea>
+                    <textarea class="form-control" v-model="review.content" cols="30" rows="5"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="">Name</label>
-                    <input type="text" v-model="review.reviewer">
+                    <input class="form-control" type="text" v-model="review.reviewer">
                 </div>
                 <button class="btn btn-primary" :disabled="!review.reviewer || !review.content" type="submit">Submit</button>
             </form>
@@ -20,13 +19,13 @@
 
 
         <div class="review" v-for="(review, index) in reviews" :key="index">
-            <p>{{review.content}}</p>
+            <p>{{review.content | truncate}}</p>
             <div class="row">
                 <div class="col-7">
-                    <h5>{{review.reviewer}}</h5>
+                    <h5>{{review.reviewer.username}}</h5>
                 </div>
                 <div class="col-5">
-                    <h5 class="pull-right">{{review.time}}</h5>
+                    <h5 class="pull-right">{{review.date | parseDate}}</h5>
                 </div>
             </div>
         </div>
@@ -34,46 +33,45 @@
 </template>
 
 <script>
-const MOCK_REVIEWS = [
-    {
-        movie_id: 7128,
-        content: 'Great show! I loved every single since. Definitely a mush watch',
-        reviewer: 'Jane Doe',
-        time: new Date().toLocaleDateString()
-    }
-]
+import moment from 'moment';
+import bus from '../bus';
 export default {
     name: 'reviews',
+    created() {
+        bus.$on('new_anime', this.getReviews)
+    },
     data() {
         return {
-            mockReviews: MOCK_REVIEWS,
-            movie: null,
+            reviews: [],
+            anime: null,
             review: {
                 content: '',
                 reviewer: ''
             }
         }
     },
-    computed: {
-        reviews() {
-            return this.mockReviews.filter(review => {
-                return review.movie_id === this.movie;
-            });
+    filters: {
+        parseDate: function(date) {
+            return moment(date).format('YYYY-MM-D');
+        },
+        truncate: function(content) {
+            if (content.length > 50) {
+                return content.substring(0,500) + '...';
+            }
+            return content;
         }
     },
     methods: {
-        addReview() {
-            if(!this.movie || !this.review.reviewer || !this.review.content) {
-                return;
-            }
-            let review = {
-                movie_id: this.movie,
-                content: this.review.content,
-                reviewer: this.review.reviewer,
-                time: new Date().toLocaleDateString(),
-            }
-            this.mockReviews.unshift(review);
-        }
+        getReviews(id) {
+            let url = `https://api.jikan.moe/v3/anime/${id}/reviews`;
+            window.console.log(url);
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    window.console.log(data.reviews);
+                    this.reviews = data.reviews; // Array
+                });
+        },
     }
 
 }
