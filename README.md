@@ -1,4 +1,4 @@
-# simplest-todo-logger
+# revue-app
 
 ## Project setup
 ```
