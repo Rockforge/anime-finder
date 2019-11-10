@@ -69,7 +69,7 @@ export default {
                     window.console.log(data);
                     this.loading = false;
                     this.error_message = '';
-                    bus.$emit('new_anime', data.results[0].mal_id);
+                    bus.$emit('new_anime', data.results[0]);
                     if(data.errorcode) {
                         this.error_message = `Sorry, anime with title '${title}' not found.`;
                         return;

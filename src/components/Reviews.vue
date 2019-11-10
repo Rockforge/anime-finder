@@ -62,8 +62,8 @@ export default {
         }
     },
     methods: {
-        getReviews(id) {
-            let url = `https://api.jikan.moe/v3/anime/${id}/reviews`;
+        getReviews(anime) {
+            let url = `https://api.jikan.moe/v3/anime/${anime.mal_id}/reviews`;
             window.console.log(url);
             fetch(url)
                 .then(response => response.json())
