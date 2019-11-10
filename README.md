@@ -1,4 +1,4 @@
-# hello-world
+# simplest-todo-logger
 
 ## Project setup
 ```
